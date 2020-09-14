@@ -3,6 +3,9 @@ let g:zkdir = get(g:, 'zkdir', $HOME.'/zettelkasten/')
 
 " search for neuron.dhall
 let s:current = expand("%:p")
+if s:current == ''
+	let s:current = getcwd()
+endif
 let s:dir = fnamemodify(s:current, ":h:r")
 while s:dir != "/"
 	if filereadable(s:dir."/neuron.dhall")
