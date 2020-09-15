@@ -7,7 +7,7 @@ if s:current == ''
 	let s:current = getcwd()
 endif
 let s:dir = fnamemodify(s:current, ":h:r")
-while s:dir != "/"
+while s:dir != "/" && s:dir != "."
 	if filereadable(s:dir."/neuron.dhall")
 		let g:zkdir = s:dir."/"
 		break
