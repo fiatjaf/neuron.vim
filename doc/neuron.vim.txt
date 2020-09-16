@@ -7,6 +7,9 @@ INTRODUCTION                                    *neuron.vim*
 neuron.vim manages your zettelkasten. You can search, create, navigate and open your zettels using fzf and neuron.
 
 CONFIGURATION                                   *neuron.vim-configuration*
+g:neuron_dir                Zettelkasten location. Default: >
+                            let g:neuron_dir = getcwd()
+
 g:neuron_extension          Zettel file extension. Default: >
                             let g:neuron_extension = '.md'
 
@@ -18,6 +21,9 @@ g:neuron_fzf_options        Change the fzf parameters. Default: >
 
 g:neuron_executable         Path to neuron. Default >
                             let g:neuron_executable = system('which neuron | tr -d "\n"')
+
+g:neuron_no_mappings        If this is set to 1 no mappings will be created. Default: >
+                            let g:neuron_no_mappings = 0
 
 MAPPINGS                                        *neuron.vim-mappings*
 
