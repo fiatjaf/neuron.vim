@@ -63,7 +63,7 @@ func! util#edit_shrink_fzf(line)
 endf
 
 func! util#handlerr(errcode)
-	let l:neuron_errors = deepcopy(g:neuron_errors)
+	let l:neuron_errors = deepcopy(g:_neuron_errors)
 	let l:err = l:neuron_errors[a:errcode]
 	let l:errmsg='neuron: '.a:errcode.': '.l:err['problem']
 	if len(l:err['suggestions']) > 0

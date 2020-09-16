@@ -16,7 +16,7 @@ let g:neuron_fzf_options         = get(g:, 'neuron_fzf_options', ['-d',':','--wi
 let g:neuron_executable = get(g:, 'neuron_executable', system('which neuron | tr -d "\n"'))
 let g:neuron_fullscreen_search = get(g:, 'neuron_fullscreen_search', 0)
 
-let g:neuron_rib_job = -1
+let g:_neuron_rib_job = -1
 
 nm <silent> <Plug>NeuronRibStop :<C-U>call rpc#stop_server()<cr>
 nm <silent> <Plug>NeuronRibStart :<C-U>call rpc#start_server()<cr>
@@ -56,7 +56,7 @@ end
 com! NeuronRibStart :call rpc#start_server()
 com! NeuronRibStop  :call rpc#stop_server()
 
-let g:neuron_errors = {
+let g:_neuron_errors = {
 	\ 'E1': {
 		\ 'problem': "neuron not found",
 		\ 'suggestions': [
