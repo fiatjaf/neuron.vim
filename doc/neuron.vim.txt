@@ -7,6 +7,12 @@ INTRODUCTION                                    *neuron.vim*
 neuron.vim manages your zettelkasten. You can search, create, navigate and open your zettels using fzf and neuron.
 
 CONFIGURATION                                   *neuron.vim-configuration*
+g:CustomNeuronIDGenerator   Hook function to define your own strategy for generating the
+                            IDs of new Zettel notes. Accepts a string 'title' parameter,
+                            and should return a string. If left undefined, neuron.vim will
+                            generate random IDs for new notes. Default: >
+                            undefined
+
 g:neuron_backlinks_size     Size in characters used for backlinks window. Default: >
                             let g:neuron_backlinks_size = 40
 
@@ -29,10 +35,6 @@ g:neuron_executable         Path to neuron. Default >
 g:neuron_extension          Zettel file extension. Default: >
                             let g:neuron_extension = '.md'
 
-g:NeuronGenerateID          Function called to generate an id for a new Zettel. Default: >
-                            func! RandomID(title)
-                            	return system("od -An -N 4 -t 'x4' /dev/random")
-                            endf
 
 g:neuron_fullscreen_search  If fzf searches are to occupy the entire screen. Default: >
                             let g:neuron_fullscreen_search = 0
