@@ -19,6 +19,21 @@ Plug 'junegunn/fzf.vim'
 Plug 'fiatjaf/neuron.vim'
 ```
 
+### Using [home-manager](https://github.com/rycee/home-manager)
+There are several ways to manage {n}vim plugins with home-manager. The current release has been tested with the `programs.neovim` module (tracking nixpkgs-unstable) like so:
+```nix
+{
+  programs.neovim = {
+    enable = true;
+    plugins = with pkgs.vimPlugins; [
+      neuron-vim
+      # ...
+    ];
+  };
+  # ...
+}
+```
+
 ## Usage
 
 1. Open a zettel with `vim` or `nvim`. On `nvim` it should
