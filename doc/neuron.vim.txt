@@ -43,7 +43,7 @@ g:neuron_fullscreen_search  If fzf searches are to occupy the entire screen. Def
 g:neuron_fzf_options        Change the fzf parameters. Note that the default
                             options are required for proper functioning when filtering of
                             zettels. Default: >
-                            let g:neuron_fzf_options = ['-d',':','--with-nth','2']
+                            let g:neuron_fzf_options = ['--exact','-d',':','--with-nth','2']
 
 g:neuron_inline_backlinks   If set to 1, then inline backlinks will be shown at the
                             top of the buffer. Default: >
