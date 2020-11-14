@@ -104,7 +104,7 @@ func! neuron#search_content(use_cursor)
 	if a:use_cursor
 		let l:query = expand("<cword>")
 	endif
-	call fzf#vim#ag(l:query, g:neuron_fullscreen_search)
+	call fzf#vim#ag(l:query, fzf#vim#with_preview({'options': '--exact'}), g:neuron_fullscreen_search)
 endf
 
 func! neuron#edit_zettel_select()
