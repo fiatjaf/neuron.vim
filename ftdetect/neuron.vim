@@ -1,5 +1,5 @@
 let g:neuron_extension = get(g:, 'neuron_extension', '.md')
-let b:neuron_dir = get(g:, 'neuron_dir')
+let b:neuron_dir = get(g:, 'neuron_dir', getcwd() . '/')
 
 " if there is no neuron.dhall file in current dir then it is not a zettelkasten
 if !filereadable(b:neuron_dir."neuron.dhall")
