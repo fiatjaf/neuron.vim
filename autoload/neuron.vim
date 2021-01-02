@@ -632,7 +632,7 @@ endfunc
 " Add tags from a selection list
 func! neuron#tags_add_select()
 	" TODO: use cache
-	let l:cmd = g:neuron_executable.' -d "'.g:neuron_dir.'" query -u z:tags'
+	let l:cmd = g:neuron_executable.' -d "'.g:neuron_dir.'" query -u z:tags 2>/dev/null'
 	let l:data = system(l:cmd)
 	let l:tags = json_decode(l:data)["result"]
 	if empty(l:tags)
