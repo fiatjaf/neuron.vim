@@ -70,6 +70,7 @@ func! neuron#insert_zettel_complete(as_folgezettel)
 		let l:reducer_to_use = 'neuron#insert_reducer_folgezettel'
 	else
 		let l:reducer_to_use = 'neuron#insert_reducer'
+
 	endif
 
 	return call('fzf#vim#complete', [fzf#wrap({
@@ -176,7 +177,7 @@ func! neuron#insert_zettel_last(as_folgezettel)
 		return
 	endif
 	let l:zettelid = util#zettel_id_from_path(g:_neuron_last_file)
-	call util#insert(l:zettelid, a:as_folgezettel)
+	call util#insert(l:zettelid, a:as_folgezettel, "a")
 endf
 
 func! neuron#edit_zettel_new()
@@ -188,13 +189,18 @@ func! neuron#edit_zettel_new()
 	call util#add_empty_zettel_body('')
 endf
 
-func! neuron#edit_zettel_new_from_cword()
+func! neuron#edit_zettel_new_from_cword(as_folgezettel)
 	let l:title = expand("<cword>")
 	let l:zettel_path = util#new_zettel_path(l:title)
 
 	" replace cword with a link to the new zettel
 	let l:zettel_id = util#zettel_id_from_path(l:zettel_path)
-	execute "normal! ciw[[[".l:zettel_id."]]]"
+	execute "normal! diw"
+
+	" if the cursor is in the last position on the line, append so that we don't
+	" smoosh together the inserted zettel with the word before it
+	let mode_transition = col('.') == col('$') - 1 ? "a" : "i"
+	call util#insert(l:zettel_id, a:as_folgezettel, l:mode_transition)
 	call neuron#add_virtual_titles()
 	w
 
@@ -203,7 +209,7 @@ func! neuron#edit_zettel_new_from_cword()
 	let g:_neuron_must_refresh_on_write = 1
 endf
 
-func! neuron#edit_zettel_new_from_visual()
+func! neuron#edit_zettel_new_from_visual(as_folgezettel)
 	let l:prev = @p
 
 	" title from visual selection
@@ -217,7 +223,10 @@ func! neuron#edit_zettel_new_from_visual()
 	""" replace selection with a link to the new zettel
 	let l:zettel_id = util#zettel_id_from_path(l:zettel_path)
 
-	execute "normal! a[[[".l:zettel_id."]]]"
+	" if the cursor is in the last position on the line, append so that we don't
+	" smoosh together the inserted zettel with the word before it
+	let mode_transition = col('.') == col('$') - 1 ? "a" : "i"
+	call util#insert(l:zettel_id, a:as_folgezettel, l:mode_transition)
 	call neuron#add_virtual_titles()
 	w
 
