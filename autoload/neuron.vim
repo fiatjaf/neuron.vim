@@ -195,11 +195,27 @@ func! neuron#edit_zettel_new_from_cword(as_folgezettel)
 
 	" replace cword with a link to the new zettel
 	let l:zettel_id = util#zettel_id_from_path(l:zettel_path)
-	execute "normal! diw"
 
-	" if the cursor is in the last position on the line, append so that we don't
-	" smoosh together the inserted zettel with the word before it
-	let mode_transition = col('.') == col('$') - 1 ? "a" : "i"
+	" we need to be fairly careful here to make sure that we insert the
+	" link in the same position in the line where it started: there are
+	" essentially three cases
+	" 1. the word is at the beginning or middle of the line
+	" 2. the word is at the end of the line
+	" 3. the word is at the end of the line followed by a single character
+	" We need to enter insert mode via i if there is already a character
+	" following the word that will be replaced so that we insert the link before
+	" the word boundary (cases 1 and 3) and we need to enter insert mode via a
+	" if there isn't a following character (i.e. we are in case 2)
+	" To detect which case we are in, we first note the current position, then
+	" go to the end of the word and check if the current position is the last
+	" character in the line, then restore the original position after
+	" determining which case we are in.
+	let l:pos = getpos('.')
+	execute "normal! e"
+	let l:mode_transition = col('.') == col('$') - 1 ? "a" : "i"
+	call setpos('.', l:pos)
+
+	execute "normal! diw"
 	call util#insert(l:zettel_id, a:as_folgezettel, l:mode_transition)
 	call neuron#add_virtual_titles()
 	w
@@ -212,6 +228,18 @@ endf
 func! neuron#edit_zettel_new_from_visual(as_folgezettel)
 	let l:prev = @p
 
+	" we need to be fairly careful here to make sure that we insert the
+	" link in the same position in the line where it started: there are
+	" essentially three cases
+	" 1. the selection is at the beginning or middle of the line
+	" 2. the selection is at the end of the line
+	" 3. the selection is at the end of the line followed by a single character
+	" We need to enter insert mode via i if there is already a character
+	" following the selection that will be replaced so that we insert the link
+	" before the word boundary (cases 1 and 3) and we need to enter insert mode
+	" via a if there isn't a following character (i.e. we are in case 2)
+	let l:mode_transition = col("'>") == col('$') - 1 ? "a" : "i"
+
 	" title from visual selection
 	execute 'normal! gv"pd'
 
@@ -223,9 +251,6 @@ func! neuron#edit_zettel_new_from_visual(as_folgezettel)
 	""" replace selection with a link to the new zettel
 	let l:zettel_id = util#zettel_id_from_path(l:zettel_path)
 
-	" if the cursor is in the last position on the line, append so that we don't
-	" smoosh together the inserted zettel with the word before it
-	let mode_transition = col('.') == col('$') - 1 ? "a" : "i"
 	call util#insert(l:zettel_id, a:as_folgezettel, l:mode_transition)
 	call neuron#add_virtual_titles()
 	w
