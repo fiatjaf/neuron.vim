@@ -1,4 +1,11 @@
-func! util#insert(zettelid, as_folgezettel)
+" Mode transition specifies how to enter insert mode, usually either 'a' or
+" 'i'. This extra parameter is necessary for properly handling replacement.
+" Consider for example the case of executing neuron#edit_zettel_from_visual on
+" text starting in the first position on the line. The cursor ends up in the
+" first position in the line, and appending would cause the new link to be
+" offset by a space, whereas the desired result is having the new link
+" start at the first character.
+func! util#insert(zettelid, as_folgezettel, mode_transition)
 	if a:as_folgezettel
 		let l:formatted = "[[[".a:zettelid."]]]"
 	else
@@ -10,7 +17,7 @@ func! util#insert(zettelid, as_folgezettel)
 		" erase things like '[[]]' before adding
 		execute "normal! diwi".l:formatted
 	else
-		execute "normal! a".l:formatted
+		execute "normal! ".a:mode_transition.l:formatted
 	endif
 
 	call neuron#add_virtual_titles()
@@ -51,11 +58,11 @@ func! util#deform_zettelid(zettelid)
 endf
 
 func! util#insert_shrink_fzf(line)
-	call util#insert(util#get_zettel_from_fzf_line(a:line), 0)
+	call util#insert(util#get_zettel_from_fzf_line(a:line), 0, "a")
 endf
 
 func! util#insert_shrink_fzf_folgezettel(line)
-	call util#insert(util#get_zettel_from_fzf_line(a:line), 1)
+	call util#insert(util#get_zettel_from_fzf_line(a:line), 1, "a")
 endf
 
 func! util#edit_shrink_fzf(line)
