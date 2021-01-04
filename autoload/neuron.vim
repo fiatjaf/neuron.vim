@@ -190,39 +190,12 @@ func! neuron#edit_zettel_new()
 endf
 
 func! neuron#edit_zettel_new_from_cword(as_folgezettel)
-	let l:title = expand("<cword>")
-	let l:zettel_path = util#new_zettel_path(l:title)
-
-	" replace cword with a link to the new zettel
-	let l:zettel_id = util#zettel_id_from_path(l:zettel_path)
-
-	" we need to be fairly careful here to make sure that we insert the
-	" link in the same position in the line where it started: there are
-	" essentially three cases
-	" 1. the word is at the beginning or middle of the line
-	" 2. the word is at the end of the line
-	" 3. the word is at the end of the line followed by a single character
-	" We need to enter insert mode via i if there is already a character
-	" following the word that will be replaced so that we insert the link before
-	" the word boundary (cases 1 and 3) and we need to enter insert mode via a
-	" if there isn't a following character (i.e. we are in case 2)
-	" To detect which case we are in, we first note the current position, then
-	" go to the end of the word and check if the current position is the last
-	" character in the line, then restore the original position after
-	" determining which case we are in.
-	let l:pos = getpos('.')
-	execute "normal! e"
-	let l:mode_transition = col('.') == col('$') - 1 ? "a" : "i"
-	call setpos('.', l:pos)
-
-	execute "normal! diw"
-	call util#insert(l:zettel_id, a:as_folgezettel, l:mode_transition)
-	call neuron#add_virtual_titles()
-	w
-
-	exec 'edit '.l:zettel_path
-	call util#add_empty_zettel_body(l:title)
-	let g:_neuron_must_refresh_on_write = 1
+	let l:vstart_prev = getpos("'<")
+	let l:vend_prev = getpos("'>")
+	execute "normal! viwv"
+	call neuron#edit_zettel_new_from_visual(a:as_folgezettel)
+	call setpos("'<", l:vstart_prev)
+	call setpos("'>", l:vend_prev)
 endf
 
 func! neuron#edit_zettel_new_from_visual(as_folgezettel)
