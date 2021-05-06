@@ -106,11 +106,12 @@ func! neuron#search_content(use_cursor)
 	endif
 
     let l:preferred_greplike_command = get(g:, 'neuron_preferred_greplike_command', 'ag')
+    let l:with_preview_args = {'dir': g:neuron_dir, 'options': '--exact'}
 
     if l:preferred_greplike_command == 'ag'
-        call fzf#vim#ag(l:query, fzf#vim#with_preview({'dir': g:neuron_dir, 'options': '--exact'}), g:neuron_fullscreen_search)
+        call fzf#vim#ag(l:query, fzf#vim#with_preview(l:with_preview_args), g:neuron_fullscreen_search)
     else
-        call fzf#vim#grep(l:preferred_greplike_command." -- ".shellescape(l:query), 1, fzf#vim#with_preview({'dir': g:neuron_dir, 'options': '--exact'}), g:neuron_fullscreen_search)
+        call fzf#vim#grep(l:preferred_greplike_command." -- ".shellescape(l:query), 1, fzf#vim#with_preview(l:with_preview_args), g:neuron_fullscreen_search)
     endif
 endf
 
