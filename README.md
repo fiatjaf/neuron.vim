@@ -10,7 +10,11 @@ help of [neuron](https://github.com/srid/neuron) in {n}vim.
 
 - [neuron](https://github.com/srid/neuron)
 - [fzf](https://github.com/junegunn/fzf.vim)
-- [ag](https://github.com/mizuno-as/silversearcher-ag) if you intend to use the content search command.
+- any grep-like tool (such as `grep`,
+[ag](https://github.com/mizuno-as/silversearcher-ag) or
+[rg](https://github.com/BurntSushi/ripgrep)) if you intend to use the
+content search command. See [below](#content-search-tool) for how to specify
+the tool used for the content search.
 
 ## Installation
 ### Using [vim-plug](https://github.com/junegunn/vim-plug)
@@ -59,14 +63,27 @@ Most operations are executed in normal mode
 
 ## Customization
 
-  - `neuron.vim` uses a custom function to generate ids for new zettels that it creates, bypassing `neuron new` completely. By default it generates a random hex string of 8 characters. You can hook into the process by defining a function `g:CustomNeuronIDGenerator` in your `.vimrc` that takes an optional `title` argument. For example:
+### Zettel ID generation
+`neuron.vim` uses a custom function to generate ids for new zettels that it creates, bypassing `neuron new` completely. By default it generates a random hex string of 8 characters. You can hook into the process by defining a function `g:CustomNeuronIDGenerator` in your `.vimrc` that takes an optional `title` argument. For example:
 
-    To make it use the title as kebab-cased ID (when using `gzN`):
+To make it use the title as kebab-cased ID (when using `gzN`):
 
-    ```
-    func! g:CustomNeuronIDGenerator(title)
-    	return substitute(a:title, " ", "-", "g")
-    endf
-    ```
+```
+func! g:CustomNeuronIDGenerator(title)
+    return substitute(a:title, " ", "-", "g")
+endf
+```
 
-    If `g:CustomNeuronIDGenerator` is not defined in your `.vimrc` or returns an empty string, `neuron.vim` will fall back to generating random IDs.
+If `g:CustomNeuronIDGenerator` is not defined in your `.vimrc` or returns an empty string, `neuron.vim` will fall back to generating random IDs.
+
+### Content search tool
+You can set `g:neuron_preferred_greplike_command` to any shell command that
+returns output similar with
+```shell
+grep --recursive --line-number --exclude-dir='.*'
+```
+For example, to use ripgrep
+```vim
+let g:neuron_preferred_greplike_command = "rg --column --line-number --no-heading --color=always --smart-case"
+```
+If not set, defaults to `ag` for backwards compability.
