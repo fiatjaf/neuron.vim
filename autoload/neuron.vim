@@ -104,7 +104,14 @@ func! neuron#search_content(use_cursor)
 	if a:use_cursor
 		let l:query = expand("<cword>")
 	endif
-	call fzf#vim#ag(l:query, fzf#vim#with_preview({'dir': g:neuron_dir, 'options': '--exact'}), g:neuron_fullscreen_search)
+
+    let l:preferred_greplike_command = get(g:, 'neuron_preferred_greplike_command', 'ag')
+
+    if l:preferred_greplike_command == 'ag'
+        call fzf#vim#ag(l:query, fzf#vim#with_preview({'dir': g:neuron_dir, 'options': '--exact'}), g:neuron_fullscreen_search)
+    else
+        call fzf#vim#grep(l:preferred_greplike_command." -- ".shellescape(l:query), 1, fzf#vim#with_preview({'dir': g:neuron_dir, 'options': '--exact'}), g:neuron_fullscreen_search)
+    endif
 endf
 
 func! neuron#edit_zettel_select()
