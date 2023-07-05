@@ -11,7 +11,7 @@ func! neuron#add_virtual_titles()
 
 	let l:ns = nvim_create_namespace('neuron')
 	call nvim_buf_clear_namespace(0, l:ns, 0, -1)
-	let l:re_neuron_link = '\[\[\[\?\([0-9a-zA-Z_-]\+\)\(?cf\)\?\]\]\]\?'
+	let l:re_neuron_link = '\#\?\[\[\([0-9a-zA-Z_-]\+\)\(?cf\)\?\]\]\#\?'
 	let l:lnum = -1
 	for line in getline(1, "$")
 		let l:lnum += 1
@@ -44,7 +44,7 @@ endf
 func! neuron#insert_reducer_folgezettel(lines)
 	let l:results = []
 	for line in a:lines
-		let l:result = '[[[' . split(line, ":")[0] . ']]]'
+		let l:result = '[[' . split(line, ":")[0] . ']]#'
 		call add(l:results, l:result)
 	endfor
 	return join(l:results, ',')
